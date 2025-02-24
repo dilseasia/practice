@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Home - My Website{% endblock %}
+
+{% block content %}
+<h2>This is the ADD FUNCTION </h2>
+<p>Welcome to the homepage of my awesome Django website!</p>
+
+<form action="add">
+    enter first number: <input type=" text" name="num1"><br>
+    enter 2ndt number: <input type="text" name="num2"><br>
+    <input type="submit">
+
+</form>
+{% endblock %}
