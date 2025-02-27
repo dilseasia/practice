@@ -1,0 +1,38 @@
+<!-- <!DOCTYPE html>
+<html>
+
+<head>
+    <title>Update Product</title>
+</head>
+
+<body>
+    <h2>Update Product: {{ product.name }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Update </button>
+    </form>
+    <a href="{% url 'product_output' %}">Back to Products</a>
+</body>
+
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Product</title>
+</head>
+
+<body>
+    <h2>Update Product: {{ product.name }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Update</button>
+    </form>
+</body>
+
+</html>

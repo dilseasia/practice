@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Results</title>
+</head>
+
+<body>
+    <h2>Employee</h2>
+    <ul>
+        {% for name in Employee %}
+        <li>{{ name }}</li>
+        {% empty %}
+        <p>No names found.</p>
+        {% endfor %}
+    </ul>
+</body>
+
+</html>
