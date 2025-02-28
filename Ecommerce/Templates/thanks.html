@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg,rgb(83, 209, 115),rgb(59, 169, 212));
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            color: white;
+        }
+
+        .container {
+            background: rgba(185, 233, 187, 0.1);
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(139, 155, 143, 0.3);
+            backdrop-filter: blur(10px);
+            max-width: 400px;
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #2ecc71;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 16px;
+            transition: background 0.3s ease-in-out;
+        }
+
+        .btn:hover {
+            background: #27ae60;
+        }
+
+        .btn.secondary {
+            background: #e74c3c;
+            margin-top: 10px;
+        }
+
+        .btn.secondary:hover {
+            background: #c0392b;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Thank You! 🎉</h2>
+        <p>Your suggestion has been submitted successfully.</p>
+        <a href="/" class="btn">🏠 Return to Home</a>
+        <p>If you want to view submissions, click below:</p>
+        <a href="{% url 'results' %}" class="btn secondary">📄 View Submissions</a>
+    </div>
+
+</body>
+
+</html>
