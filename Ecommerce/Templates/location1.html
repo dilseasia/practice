@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location - Main Branch</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #8b8888, #a3a0a0);
+            color: white;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            backdrop-filter: blur(10px);
+            width: 350px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            font-size: 24px;
+            color: gold;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .location-img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0px 2px 8px rgba(255, 215, 0, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>📍 Main Branch Location</h1>
+        <p><strong>State:</strong> Himachal Pradesh</p>
+        <p><strong>City:</strong> Una</p>
+        <p><strong>Pincode:</strong> 174316</p>
+        <p><strong>Phone:</strong> 7876604428</p>
+
+        <img src="{% static 'images/una.jpeg' %}" alt="Una Image" class="location-img">
+    </div>
+
+</body>
+
+</html>

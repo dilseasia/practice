@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Form</title>
+
+    <style>
+        /* Full Page Background */
+        body {
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Form Container */
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+            width: 400px;
+            text-align: center;
+        }
+
+        /* Heading */
+        h2 {
+            color: #2c3e50;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        /* Form Grid Layout */
+        .form-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .form-group {
+            width: calc(50% - 5px);
+            text-align: left;
+        }
+
+        .full-width {
+            width: 100%;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 13px;
+            color: #555;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 13px;
+            margin-top: 3px;
+        }
+
+        /* Submit Button */
+        .btn-submit {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background: #3498db;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-submit:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Apply for Your Career</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Job Title</label>
+                <input type="text" name="job_title" required>
+            </div>
+            <div class="form-group">
+                <label>Experience (Years)</label>
+                <input type="number" name="experience" required>
+            </div>
+            <div class="form-group full-width">
+                <label>Qualification</label>
+                <input type="text" name="qualification" required>
+            </div>
+        </div>
+        <button type="submit" class="btn-submit">Apply Now</button>
+    </form>
+</div>
+
+</body>
+</html>
