@@ -6,6 +6,9 @@ from django.apps import apps
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
 
+from django.db import models, transaction
+from django.core.mail import send_mail
+from django.conf import settings
 import stripe
 from django.conf import settings
 from django.db import models
@@ -62,7 +65,10 @@ class Cart(models.Model):
 
 
 
+
+
 User = get_user_model()
+
 class Order(models.Model):
     STATUS_CHOICES = [
         ('Pending', 'Pending'),
@@ -79,33 +85,46 @@ class Order(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def calculate_total_price(self):
-        total = self.order_items.aggregate(
-        total=models.Sum(models.F('product__price') * models.F('quantity'), output_field=models.DecimalField())
-    )['total']
+        total = self.order_items.annotate(
+            item_total=models.F('product__price') * models.F('quantity')
+        ).aggregate(total=models.Sum('item_total'))['total']
         return total or 0  # Return 0 if no items exist
-
-
 
     def save(self, *args, **kwargs):
         is_new = self.pk is None  # Check if it's a new order
 
-        if is_new:
-            super().save(*args, **kwargs)  # Save first to generate ID
+        super().save(*args, **kwargs)  # Save the order first
 
-        super().save(*args, **kwargs)  # Save again to ensure `order_items` exist
-        self.total_amount = self.calculate_total_price()
-        super().save(update_fields=['total_amount'])  # Update total amount
+        # Update total amount only after order items are created
+        if not is_new:
+            self.total_amount = self.calculate_total_price()
+            super().save(update_fields=['total_amount'])  # Update only total_amount
 
-        if is_new:
-            from django.db import transaction
-            transaction.on_commit(self.send_order_confirmation_email)  # Send email after transaction completes
+        # If the order status has changed to "Shipped", send an email
+        if self.pk and self.status == "Shipped":
+            self.send_shipped_email()
 
+        # if is_new:
+        #     transaction.on_commit(self.send_order_confirmation_email)
 
     def send_order_confirmation_email(self):
         """Send an email to the user when an order is placed"""
         subject = f"Order Confirmation - Order #{self.id}"
-        message = f"Dear {self.user.username},\n\nThank you for your order!\n\nYour order details:\n- Order ID: {self.id}\n- Total Amount: rs{self.total_amount}\n- Status: {self.status}\n- Shipping Address: {self.shipping_address}\n\nWe will notify you when your order is shipped.\n\nThank you for shopping with us .!"
-        
+        message = f"Dear {self.user.username},\n\nThank you for your order!\n\nYour order details:\n- Order ID: {self.id}\n- Total Amount: ₹{self.total_amount}\n- Status: {self.status}\n- Shipping Address: {self.shipping_address}\n\nWe will notify you when your order is shipped.\n\nThank you for shopping with us!"
+
+        send_mail(
+            subject,
+            message,
+            settings.EMAIL_HOST_USER,  # Sender email
+            [self.user.email],  # Recipient email
+            fail_silently=False,
+        )
+
+    def send_shipped_email(self):
+        """Send an email to the user when the order is shipped"""
+        subject = f"Your Order #{self.id} has been Shipped"
+        message = f"Dear {self.user.username},\n\nGood news! Your order has been shipped.\n\nOrder Details:\n- Order ID: {self.id}\n- Total Amount: ₹{self.total_amount}\n- Shipping Address: {self.shipping_address}\n\nThank you for shopping with us!"
+
         send_mail(
             subject,
             message,
@@ -116,6 +135,8 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order {self.id} - {self.user.username}"
+
+
 
 
     

@@ -63,29 +63,32 @@ class CartSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class OrderItemSerializer(serializers.ModelSerializer):
+    product_name = serializers.CharField(source='product.name', read_only=True)
+    price = serializers.DecimalField(source='product.price', max_digits=10, decimal_places=2, read_only=True)
+    total = serializers.SerializerMethodField()
+
     class Meta:
         model = OrderItem
-        fields = ['product', 'quantity']
+        fields = ['product_name', 'quantity', 'price', 'total']
+
+    def get_total(self, obj):
+        # Calculate total price per order item (product price * quantity)
+        return obj.product.price * obj.quantity
         
+
+
 class OrderSerializer(serializers.ModelSerializer):
-    order_items = OrderItemSerializer(many=True, write_only=True)
-    total_amount = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)  # Read-only
+    order_items = OrderItemSerializer(many=True, read_only=True)
+    total_amount = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    status = serializers.ChoiceField(choices=Order.STATUS_CHOICES, default="Pending")  # Allow status in creation
 
     class Meta:
         model = Order
-        fields = ['id', 'user', 'order_items', 'total_amount', 'status', 'shipping_address', 'created_at']
+        fields = ['id', 'shipping_address', 'status', 'total_amount', 'order_items']
 
     def create(self, validated_data):
-        order_items_data = validated_data.pop('order_items')
-        order = Order.objects.create(**validated_data)  # Save without total_amount
-
-        for item_data in order_items_data:
-            OrderItem.objects.create(order=order, **item_data)
-
-        order.total_amount = order.calculate_total_price()  # Set total price
-        order.save(update_fields=['total_amount'])  # Save only total_amount field
-
-        return order
+        validated_data['user'] = self.context['request'].user  # Automatically assign the logged-in user
+        return super().create(validated_data)
 
 
 class PaymentSerializer(serializers.ModelSerializer):
